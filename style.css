@@ -515,9 +515,11 @@ body.dark .hero-overlay {
    ========================================================================== */
 .carousel-wrapper {
   position: relative;
+  width: 100%;
   max-width: 670px;  /* 620px + 25px padding × 2 */
   margin: 0 auto;
   padding: 25px;
+  box-sizing: border-box;
 }
 
 .ornament-corner {
@@ -578,8 +580,9 @@ body.dark .hero-overlay {
 .carousel-container {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  height: 420px;              /* Landscape rectangle */
+  max-width: 620px;
+  /* Formato retrato (alargado verticalmente) */
+  aspect-ratio: 3 / 4;
   margin: 0 auto;
   border-radius: 6px;
   overflow: hidden;
@@ -620,20 +623,22 @@ body.dark .hero-overlay {
   min-width: 100%;
   height: 100%;
   position: relative;
-  padding: 30px;
+  padding: 40px;            /* Margen alrededor de la foto */
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .carousel-slide img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
   display: block;
   border-radius: var(--border-radius-sm);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
 .carousel-btn {
@@ -1089,4 +1094,24 @@ body.dark .hero-overlay {
 
   .gift-card    { padding: 30px 15px; }
   .bank-details { padding: 12px; }
+
+  /* Carrusel responsivo en móvil */
+  .carousel-wrapper {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .ornament-corner {
+    width: 35px;
+    height: 35px;
+  }
+
+  .carousel-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.95rem;
+  }
+
+  .carousel-btn-left  { left: 8px; }
+  .carousel-btn-right { right: 8px; }
 }

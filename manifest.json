@@ -1,0 +1,22 @@
+{
+  "short_name": "Boda C&X",
+  "name": "Boda de Cristhian & Ximena - Invitación",
+  "description": "Estás cordialmente invitado a celebrar nuestra unión matrimonial.",
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#FCFBF7",
+  "theme_color": "#D4AF37",
+  "display": "standalone",
+  "orientation": "portrait"
+}

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boda de Cristhian & Ximena — Nuestra Invitación</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Acompáñanos a celebrar el día más importante de nuestras vidas. Aquí encontrarás todos los detalles del evento, ubicación, RSVP y mesa de regalos.">
+  <meta name="keywords" content="boda, invitacion digital, Cristhian y Ximena, matrimonio, RSVP, mesa de regalos">
+  <meta name="author" content="Cristhian & Ximena">
+
+  <!-- PWA Support -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#D4AF37">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Custom Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="loading">
+
+  <!-- Background Music Element -->
+  <audio id="bg-music" loop>
+    <source src="assets/music.mp3" type="audio/mp3">
+    Tu navegador no soporta el reproductor de audio.
+  </audio>
+
+  <!-- Sparkles Canvas Layer -->
+  <canvas id="sparkles-canvas"></canvas>
+
+  <!-- Theme Toggle Floating Button -->
+  <button id="theme-toggle" class="btn-floating" aria-label="Cambiar Tema" title="Cambiar Tema">
+    <i class="fa-solid fa-moon"></i>
+  </button>
+
+  <!-- Floating Audio Controller -->
+  <button id="music-controller" class="btn-floating music-playing" aria-label="Reproducir/Pausar Música"
+    title="Reproducir/Pausar Música">
+    <div class="music-disc">
+      <i class="fa-solid fa-music"></i>
+    </div>
+  </button>
+
+  <!-- Floating Share and QR Button -->
+  <button id="share-controller" class="btn-floating" aria-label="Compartir Invitación" title="Compartir Invitación">
+    <i class="fa-solid fa-share-nodes"></i>
+  </button>
+
+  <!-- Floating WhatsApp RSVP Shortcut -->
+  <a href="https://wa.me/5939399880336?text=Hola%20Ximena%20y%20Cristhian%2C%20acabo%20de%20recibir%20su%20invitaci%C3%B3n."
+    class="btn-floating float-wa" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"
+    title="Escríbenos por WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- 1. PANTALLA DE BIENVENIDA (Hero Entry Gate) -->
+  <div id="welcome-gate">
+    <div class="gate-overlay"></div>
+    <div class="gate-content">
+      <span class="gate-intro">Nuestra Boda</span>
+      <h1 class="gate-title">Cristhian & Ximena</h1>
+      <p class="gate-phrase">"Encontré a aquel a quien ama mi alma."</p>
+      <div class="gate-divider">
+        <span class="gold-line"></span>
+        <i class="fa-solid fa-heart gold-heart"></i>
+        <span class="gold-line"></span>
+      </div>
+      <p class="gate-date">15 de Agosto, 2026</p>
+      <button id="btn-open-invite" class="btn-primary-gold">
+        <i class="fa-solid fa-envelope-open"></i> Abrir Invitación
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Website Content (Hidden initially for entry animation) -->
+  <main id="main-content">
+
+    <!-- Hero Section Banner -->
+    <header class="hero-banner">
+      <div class="hero-bg" style="background-image: url('assets/hero-bg.png');"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-text-content">
+        <span class="reveal fade-in">15.08.2026</span>
+        <h2 class="reveal slide-up">Cristhian & Ximena</h2>
+        <p class="reveal slide-up">¡Nos casamos!</p>
+        <div class="scroll-indicator">
+          <span>Desliza para ver más</span>
+          <i class="fa-solid fa-chevron-down bounce"></i>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. CUENTA REGRESIVA -->
+    <section id="countdown" class="section-container bg-warm-ivory">
+      <div class="section-header reveal fade-in">
+        <h3 class="font-accent">Faltan Sólo</h3>
+        <p class="section-subtitle">Días para unir nuestras vidas</p>
+      </div>
+
+      <div class="countdown-grid reveal scale-in">
+        <div class="countdown-card glass">
+          <span id="days" class="time-num">00</span>
+          <span class="time-label">Días</span>
+        </div>
+        <div class="countdown-card glass">
+          <span id="hours" class="time-num">00</span>
+          <span class="time-label">Horas</span>
+        </div>
+        <div class="countdown-card glass">
+          <span id="minutes" class="time-num">00</span>
+          <span class="time-label">Min</span>
+        </div>
+        <div class="countdown-card glass">
+          <span id="seconds" class="time-num">00</span>
+          <span class="time-label">Seg</span>
+        </div>
+      </div>
+
+      <div class="countdown-footer reveal slide-up">
+        <p class="romantic-quote">"El amor no consiste en mirarse el uno al otro, sino en mirar juntos en la misma
+          dirección."</p>
+      </div>
+    </section>
+
+    <!-- SECCIÓN DE HISTORIA ELIMINADA PARA MANTENER LA BREVEDAD -->
+
+    <!-- 4. GALERÍA FOTOGRÁFICA -->
+    <section id="gallery" class="section-container bg-warm-ivory">
+      <div class="section-header reveal fade-in">
+        <h3 class="font-accent">Galería de Momentos</h3>
+        <div class="leaf-divider"><i class="fa-solid fa-camera-retro"></i></div>
+        <p class="section-subtitle">Capturas de nuestra felicidad compartida</p>
+      </div>
+
+      <div class="carousel-wrapper reveal scale-in">
+        <span class="ornament-corner corner-tl"></span>
+        <span class="ornament-corner corner-tr"></span>
+        <span class="ornament-corner corner-bl"></span>
+        <span class="ornament-corner corner-br"></span>
+        <div class="carousel-container">
+          <div class="carousel-track-container">
+            <ul class="carousel-track" id="gallery-carousel-track">
+              <!-- JS will inject images here -->
+            </ul>
+          </div>
+          <button class="carousel-btn carousel-btn-left" id="carousel-left" aria-label="Anterior">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button class="carousel-btn carousel-btn-right" id="carousel-right" aria-label="Siguiente">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. INFORMACIÓN DEL EVENTO & 11. UBICACIÓN -->
+    <section id="event-info" class="section-container bg-white">
+      <div class="section-header reveal fade-in">
+        <h3 class="font-accent">Cuándo & Dónde</h3>
+        <div class="leaf-divider"><i class="fa-solid fa-calendar-days"></i></div>
+        <p class="section-subtitle">Todos los detalles para que nos acompañes</p>
+      </div>
+
+      <div class="event-cards reveal slide-up">
+        <!-- Ceremonia y Recepción Card -->
+        <div class="event-card glass text-center" style="max-width: 500px; margin: 0 auto;">
+          <div class="card-icon"><i class="fa-solid fa-ring"></i> <i class="fa-solid fa-champagne-glasses"></i></div>
+          <h4>Ceremonia Civil & Recepción</h4>
+          <div class="card-divider"></div>
+          <p class="event-detail" style="justify-content: center;"><i class="fa-solid fa-calendar-day"></i> Sábado, 15 de Agosto de 2026</p>
+          <p class="event-detail" style="justify-content: center;"><i class="fa-solid fa-clock"></i> 19:00 Hrs</p>
+          <p class="event-detail" style="justify-content: center; text-align: center;"><i
+              class="fa-solid fa-location-dot"></i> Casa Sandra, Av. del Ejército y Padre Buenaventura Castro</p>
+          <p class="event-address">Zamora<br>Cerca a la Estación de Servicio Reina del Cisne</p>
+          <a href="https://maps.google.com/?q=Av.+del+Ejercito+y+Padre+Buenaventura+Castro,+Zamora" target="_blank"
+            rel="noopener" class="btn-outline-gold">
+            <i class="fa-solid fa-map-location-dot"></i> Ver en Google Maps
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CÓDIGO DE VESTIMENTA ELIMINADO -->
+
+    <!-- 8. MESA DE REGALOS -->
+    <section id="gift-table" class="section-container bg-white">
+      <div class="section-header reveal fade-in">
+        <h3 class="font-accent">Mesa de Regalos</h3>
+        <div class="leaf-divider"><i class="fa-solid fa-gift"></i></div>
+        <p class="section-subtitle">El mejor regalo es tu presencia, pero si deseas tener un detalle con nosotros...</p>
+      </div>
+
+      <div class="gift-options reveal slide-up">
+        <!-- Option Bank -->
+        <div class="gift-card glass">
+          <div class="gift-icon"><i class="fa-solid fa-building-columns"></i></div>
+          <h4>Transferencia Bancaria</h4>
+          <p class="gift-description">Puedes realizar una transferencia bancaria o depósito directo a nuestra cuenta:
+          </p>
+          <ul class="bank-details">
+            <li><strong>Banco:</strong> Banco de Pichincha</li>
+            <li><strong>Cèdula:</strong> 1104029861</li>
+            <li><strong>Beneficiario:</strong> Cristhian Paul Muñoz Chamba</li>
+            <li><strong>Tipo de Cuenta:</strong> Ahorros</li>
+            <li><strong>Número de Cuenta:</strong> 2200409128</li>
+          </ul>
+          <button class="btn-copy-account" onclick="copyClabe('2200409128')">
+            <i class="fa-solid fa-copy"></i> Copiar Cuenta
+          </button>
+        </div>
+
+        <!-- Option Digital -->
+        <div class="gift-card glass">
+          <div class="gift-icon"><i class="fa-solid fa-qrcode"></i></div>
+          <h4>Código QR</h4>
+          <p class="gift-description">También puedes visualizar nuestro código QR para realizar tu depósito de forma
+            rápida y segura:</p>
+          
+          <!-- Contenedor para mostrar el código QR -->
+          <div class="qr-image-container" style="margin: 20px auto; max-width: 200px; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; justify-content: center; align-items: center;">
+            <img src="assets/QR PICHINCHA.png" alt="Código QR Pichincha" style="width: 100%; height: auto; display: block; max-width: 100%;">
+          </div>
+
+          <a href="assets/qrPichincha.pdf" target="_blank" rel="noopener" class="btn-outline-gold"
+            style="margin-top: 5px;">
+            <i class="fa-solid fa-file-pdf"></i> Ver QR (PDF)
+          </a>
+          <p class="thank-you-msg" style="margin-top: 20px;">¡Agradecemos enormemente tu generosidad y apoyo en el
+            inicio de nuestra vida juntos!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CONFIRMACIÓN DE ASISTENCIA (RSVP) -->
+    <section id="rsvp" class="section-container bg-warm-ivory">
+      <div class="section-header reveal fade-in">
+        <h3 class="font-accent">Confirmación de Asistencia</h3>
+        <div class="leaf-divider"><i class="fa-solid fa-envelope-circle-check"></i></div>
+        <p class="section-subtitle">Por favor confirma antes del 15 de Julio de 2026</p>
+      </div>
+
+      <div class="rsvp-form-container glass reveal scale-in text-center"
+        style="max-width: 550px; margin: 0 auto; padding: 3rem;">
+        <p
+          style="margin-bottom: 1.5rem; font-size: 1.4rem; font-family: var(--font-serif); font-weight: 500; color: var(--color-primary-hover);">
+          ¡Nos encantaría que nos acompañes a celebrar!
+        </p>
+        <p style="margin-bottom: 2.5rem; font-size: 1.2rem; font-style: italic; color: var(--color-text-main);">
+          Por favor, confirma tu asistencia haciendo clic en el siguiente botón:
+        </p>
+        <a href="https://forms.gle/RYhRzf4Y46HQn8dEA" target="_blank" rel="noopener" class="btn-primary-gold pulse-btn"
+          style="display: inline-block; width: 100%; box-sizing: border-box; text-decoration: none; border-radius: 30px; font-size: 1.2rem; padding: 18px 30px; font-weight: 600; box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);">
+          <i class="fa-solid fa-envelope-open-text"></i> CONFIRMAR ASISTENCIA
+        </a>
+      </div>
+    </section>
+
+    <!-- GUESTBOOK ELIMINADO -->
+
+    <!-- 12. FOOTER -->
+    <footer class="main-footer">
+      <div class="footer-bg" style="background-image: url('assets/hero-bg.png');"></div>
+      <div class="footer-overlay"></div>
+      <div class="footer-content">
+        <p class="footer-thankyou">Gracias por formar parte de nuestras vidas</p>
+        <h2 class="footer-names">Cristhian & Ximena</h2>
+        <div class="footer-date">15 • Agosto • 2026</div>
+        <div class="footer-divider"></div>
+        <div class="social-links">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest"></i></a>
+        </div>
+        <p class="footer-credits">Desarrollado con amor para Cristhian y Ximena. &copy; 2026 Todos los derechos
+          reservados.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- LIGHTBOX ELIMINADO EN FAVOR DEL CARRUSEL -->
+
+  <!-- SHARE & QR MODAL -->
+  <div id="share-modal" class="modal-overlay">
+    <div class="modal-card glass">
+      <span class="modal-close" onclick="closeShareModal()">&times;</span>
+      <h4>Compartir Invitación</h4>
+      <p class="modal-subtitle">Invita a tus familiares y amigos a celebrar este gran evento</p>
+
+      <div class="qr-modal-container">
+        <div id="share-qr-code" class="qr-code-box"></div>
+        <p class="qr-instructions">Muestra este código QR para que lo escaneen o descarga la invitación.</p>
+      </div>
+
+      <div class="share-actions">
+        <button class="btn-primary-gold w-100" onclick="copyLink()">
+          <i class="fa-solid fa-copy"></i> Copiar Enlace
+        </button>
+        <button id="btn-native-share" class="btn-outline-gold w-100">
+          <i class="fa-solid fa-share-nodes"></i> Compartir Redes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS MODAL ELIMINADO -->
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-notification">Mensaje de notificación</div>
+
+  <!-- Javascript Logic -->
+  <script src="app.js"></script>
+</body>
+
+</html>

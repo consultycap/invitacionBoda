@@ -1,0 +1,17 @@
+{
+  "name": "boda-cristhian-ximena",
+  "version": "1.0.0",
+  "description": "Invitación digital premium para la boda de Cristhian y Ximena",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y http-server . -p 3000 -o"
+  },
+  "keywords": [
+    "wedding",
+    "invitation",
+    "responsive",
+    "pwa"
+  ],
+  "author": "Cristhian & Ximena",
+  "license": "ISC"
+}

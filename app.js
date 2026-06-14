@@ -5,16 +5,6 @@
 // Config & State
 const WEDDING_DATE = new Date('August 15, 2026 19:00:00').getTime();
 const WHATSAPP_PHONE = '593939880336'; // Destination phone for RSVP (Ecuador format)
-let audioContext = null;
-let currentLightboxIndex = 0;
-// Galería manejada dinámicamente por el carrusel
-
-// Seed wishes for the guestbook if empty
-const SEED_WISHES = [
-  { name: 'Sofía & Fernando', text: '¡Muchísimas felicidades, queridos amigos! Estamos contando los días para celebrar con ustedes su gran amor. Les deseamos una vida llena de risas y complicidad.', date: 'Hace 2 días' },
-  { name: 'Tía Elena', text: 'Qué gran alegría verlos dar este hermoso paso. Que Dios bendiga su unión siempre. Con todo mi cariño.', date: 'Hace 1 día' },
-  { name: 'Carlos Mendoza', text: '¡Se nos casa Cristhian! Un fuerte abrazo para ambos, les deseo lo mejor en esta nueva etapa. ¡A celebrar en grande!', date: 'Hace 3 horas' }
-];
 
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
@@ -42,9 +32,6 @@ function initApp() {
 
   // Canvas Sparkles Effect
   initCanvasSparkles();
-
-  // Wishes Wall Loading
-  loadWishes();
 
   // QR Code & Native Share Setup
   initShare();
@@ -81,7 +68,7 @@ function openInvitation() {
   if (gate) {
     gate.classList.add('fade-out');
   }
-  
+
   // Enable scrolling
   body.classList.remove('loading');
 
@@ -212,8 +199,8 @@ function initScrollReveal() {
 
   const observerOptions = {
     root: null,
-    threshold: 0.15, // Trigger when 15% of the card is visible
-    rootMargin: "0px 0px -50px 0px" // Slight offset
+    threshold: 0.15,
+    rootMargin: "0px 0px -50px 0px"
   };
 
   const observer = new IntersectionObserver(revealCallback, observerOptions);
@@ -238,7 +225,7 @@ function initCanvasSparkles() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
-  
+
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
@@ -255,33 +242,29 @@ function initCanvasSparkles() {
       this.speedY = Math.random() * 0.4 + 0.2;
       this.speedX = Math.random() * 0.2 - 0.1;
       this.opacity = Math.random() * 0.5 + 0.1;
-      this.fadeSpeed = Math.random() * 0.005 + 0.002;
     }
 
     update() {
       this.y -= this.speedY;
       this.x += this.speedX;
-      
-      // Floating side movements
       this.speedX += Math.random() * 0.02 - 0.01;
-      
-      // Reset if out of bounds or invisible
-      if (this.y < -20 || this.opacity <= 0) {
+
+      if (this.y < -20) {
         this.reset();
       }
     }
 
     draw() {
       ctx.beginPath();
-      // Light gold sparkle color depending on theme
       const isDark = document.body.classList.contains('dark');
-      ctx.fillStyle = isDark ? `rgba(232, 195, 90, ${this.opacity})` : `rgba(212, 175, 55, ${this.opacity})`;
+      ctx.fillStyle = isDark
+        ? `rgba(232, 195, 90, ${this.opacity})`
+        : `rgba(212, 175, 55, ${this.opacity})`;
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
-  // Populate particles
   for (let i = 0; i < particleCount; i++) {
     particles.push(new Particle());
   }
@@ -299,18 +282,18 @@ function initCanvasSparkles() {
 }
 
 /* ==========================================================================
-   LIGHTBOX GALLERY
+   CAROUSEL / GALERÍA
    ========================================================================== */
 function initCarousel() {
   const track = document.getElementById('gallery-carousel-track');
   const btnLeft = document.getElementById('carousel-left');
   const btnRight = document.getElementById('carousel-right');
-  
+
   if (!track || !btnLeft || !btnRight) return;
 
   const totalImages = 32;
-  
-  // Inject images
+
+  // Inject images dynamically
   for (let i = 1; i <= totalImages; i++) {
     const li = document.createElement('li');
     li.className = 'carousel-slide';
@@ -330,33 +313,17 @@ function initCarousel() {
   }
 
   function nextSlide() {
-    currentIndex++;
-    if (currentIndex >= totalImages) {
-      currentIndex = 0;
-    }
+    currentIndex = (currentIndex + 1) >= totalImages ? 0 : currentIndex + 1;
     updateCarousel();
   }
 
   function prevSlide() {
-    currentIndex--;
-    if (currentIndex < 0) {
-      currentIndex = totalImages - 1;
-    }
+    currentIndex = (currentIndex - 1) < 0 ? totalImages - 1 : currentIndex - 1;
     updateCarousel();
   }
 
-  btnRight.addEventListener('click', () => {
-    nextSlide();
-    resetAutoPlay();
-  });
-
-  btnLeft.addEventListener('click', () => {
-    prevSlide();
-    resetAutoPlay();
-  });
-
   function startAutoPlay() {
-    autoPlayInterval = setInterval(nextSlide, 3500); // 3.5 segundos
+    autoPlayInterval = setInterval(nextSlide, 3500);
   }
 
   function resetAutoPlay() {
@@ -364,86 +331,14 @@ function initCarousel() {
     startAutoPlay();
   }
 
+  btnRight.addEventListener('click', () => { nextSlide(); resetAutoPlay(); });
+  btnLeft.addEventListener('click', () => { prevSlide(); resetAutoPlay(); });
+
   startAutoPlay();
 }
 
 /* ==========================================================================
-   RSVP SUBMISSION & WHATSAPP
-   ========================================================================== */
-let pendingRSVPData = null;
-
-window.handleRSVPSubmit = function(event) {
-  event.preventDefault();
-  
-  const name = document.getElementById('rsvp-name').value.trim();
-  const companions = document.getElementById('rsvp-companions').value;
-  const phone = document.getElementById('rsvp-phone').value.trim();
-  const attendance = document.querySelector('input[name="rsvp-attendance"]:checked').value;
-  const notes = document.getElementById('rsvp-notes').value.trim();
-
-  if (!name || !phone) {
-    showToast('Por favor completa todos los campos requeridos.');
-    return;
-  }
-
-  pendingRSVPData = { name, companions, phone, attendance, notes };
-
-  // Save to simulated database
-  const rsvps = JSON.parse(localStorage.getItem('wedding-rsvps') || '[]');
-  rsvps.push({ ...pendingRSVPData, timestamp: new Date().toISOString() });
-  localStorage.setItem('wedding-rsvps', JSON.stringify(rsvps));
-
-  // Show Success Confirmation Modal
-  const successModal = document.getElementById('success-modal');
-  const successMsg = document.getElementById('success-msg');
-  
-  if (successMsg) {
-    successMsg.innerText = attendance === 'Si' 
-      ? `¡Gracias, ${name}! Hemos registrado tu confirmación de asistencia.`
-      : `Lamentamos que no puedas asistir, ${name}. Tu respuesta ha sido guardada.`;
-  }
-
-  if (successModal) {
-    successModal.classList.add('active');
-  }
-
-  // Clear RSVP form
-  document.getElementById('rsvp-form').reset();
-};
-
-window.closeSuccessModal = function() {
-  const successModal = document.getElementById('success-modal');
-  if (successModal) {
-    successModal.classList.remove('active');
-  }
-};
-
-window.redirectToWhatsApp = function() {
-  if (!pendingRSVPData) return;
-
-  const { name, companions, phone, attendance, notes } = pendingRSVPData;
-  const emojiAtt = attendance === 'Si' ? '✅ Sí, asistiré con gusto' : '❌ Lamentablemente no podré asistir';
-  
-  let message = `*CONFIRMACIÓN DE ASISTENCIA A LA BODA* 🤵👰\n\n`;
-  message += `👤 *Invitado:* ${name}\n`;
-  message += `📞 *Teléfono:* ${phone}\n`;
-  message += `💍 *Asistencia:* ${emojiAtt}\n`;
-  if (attendance === 'Si') {
-    message += `👥 *Acompañantes:* +${companions}\n`;
-  }
-  if (notes) {
-    message += `📝 *Mensaje:* ${notes}\n`;
-  }
-
-  const encodedMsg = encodeURIComponent(message);
-  const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodedMsg}`;
-  
-  window.open(waUrl, '_blank');
-  closeSuccessModal();
-};
-
-/* ==========================================================================
-   GIFT TABLE CLABE COPY
+   GIFT TABLE - COPY ACCOUNT NUMBER
    ========================================================================== */
 window.copyClabe = function(clabe) {
   navigator.clipboard.writeText(clabe).then(() => {
@@ -455,102 +350,27 @@ window.copyClabe = function(clabe) {
 };
 
 /* ==========================================================================
-   GUESTBOOK / WISHES WALL
-   ========================================================================== */
-function loadWishes() {
-  const wall = document.getElementById('wishes-wall');
-  if (!wall) return;
-
-  let wishes = JSON.parse(localStorage.getItem('wedding-wishes') || '[]');
-
-  // Seed data if empty
-  if (wishes.length === 0) {
-    wishes = [...SEED_WISHES];
-    localStorage.setItem('wedding-wishes', JSON.stringify(wishes));
-  }
-
-  // Render wishes
-  wall.innerHTML = '';
-  wishes.forEach(wish => {
-    const wishCard = document.createElement('div');
-    wishCard.className = 'wish-card';
-    wishCard.innerHTML = `
-      <div class="wish-meta">
-        <span class="wish-author">${wish.name}</span>
-        <span class="wish-date">${wish.date || 'Hace un momento'}</span>
-      </div>
-      <p class="wish-text">"${wish.text}"</p>
-    `;
-    wall.prepend(wishCard);
-  });
-}
-
-window.handleGuestbookSubmit = function(event) {
-  event.preventDefault();
-
-  const nameInput = document.getElementById('gb-name');
-  const messageInput = document.getElementById('gb-message');
-
-  const name = nameInput.value.trim();
-  const text = messageInput.value.trim();
-
-  if (!name || !text) {
-    showToast('Por favor completa todos los campos.');
-    return;
-  }
-
-  const newWish = {
-    name,
-    text,
-    date: 'Hace un momento'
-  };
-
-  const wishes = JSON.parse(localStorage.getItem('wedding-wishes') || '[]');
-  wishes.push(newWish);
-  localStorage.setItem('wedding-wishes', JSON.stringify(wishes));
-
-  // Reload Wishes Wall
-  loadWishes();
-
-  // Reset inputs
-  nameInput.value = '';
-  messageInput.value = '';
-
-  showToast('<i class="fa-solid fa-heart"></i> ¡Mensaje publicado!');
-};
-
-/* ==========================================================================
    SHARE MODAL & QR CODE GENERATION
    ========================================================================== */
 function initShare() {
   const shareBtn = document.getElementById('share-controller');
   const nativeShareBtn = document.getElementById('btn-native-share');
-  
+
   if (!shareBtn) return;
 
-  // Render QR Codes using QRServer API inside layout containers
   const currentUrl = window.location.href;
   const qrBaseUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=`;
-  
-  const giftQr = document.getElementById('gift-qr-code');
-  if (giftQr) {
-    giftQr.innerHTML = `<img src="${qrBaseUrl}${encodeURIComponent('https://cuentadebanco.cristhianyximena.com')}" alt="QR Transferencia" style="max-width:100%">`;
-  }
 
   const shareQr = document.getElementById('share-qr-code');
   if (shareQr) {
     shareQr.innerHTML = `<img src="${qrBaseUrl}${encodeURIComponent(currentUrl)}" alt="QR Compartir Sitio" style="max-width:100%">`;
   }
 
-  // Open Modal triggers
   shareBtn.addEventListener('click', () => {
     const shareModal = document.getElementById('share-modal');
-    if (shareModal) {
-      shareModal.classList.add('active');
-    }
+    if (shareModal) shareModal.classList.add('active');
   });
 
-  // Native Web Share API trigger
   if (nativeShareBtn) {
     nativeShareBtn.addEventListener('click', () => {
       if (navigator.share) {
@@ -559,13 +379,11 @@ function initShare() {
           text: 'Te invitamos a celebrar nuestra unión matrimonial el próximo 15 de Agosto de 2026. Abre nuestra invitación digital:',
           url: currentUrl
         }).then(() => {
-          console.log('Compartido exitosamente');
           closeShareModal();
         }).catch(err => {
           console.warn('Error al compartir o cancelado:', err);
         });
       } else {
-        // Fallback: Copy Link
         copyLink();
       }
     });
@@ -574,9 +392,7 @@ function initShare() {
 
 window.closeShareModal = function() {
   const shareModal = document.getElementById('share-modal');
-  if (shareModal) {
-    shareModal.classList.remove('active');
-  }
+  if (shareModal) shareModal.classList.remove('active');
 };
 
 window.copyLink = function() {

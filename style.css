@@ -578,7 +578,7 @@ body.dark .hero-overlay {
 .carousel-container {
   position: relative;
   width: 100%;
-  max-width: 620px;
+  max-width: 460px;
   height: 460px;              /* Landscape rectangle */
   margin: 0 auto;
   border-radius: 6px;

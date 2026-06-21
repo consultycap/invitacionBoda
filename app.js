@@ -237,31 +237,42 @@ function initCanvasSparkles() {
 
     reset() {
       this.x = Math.random() * canvas.width;
-      this.y = canvas.height + 20;
-      this.radius = Math.random() * 2.5 + 0.5;
-      this.speedY = Math.random() * 0.4 + 0.2;
-      this.speedX = Math.random() * 0.2 - 0.1;
-      this.opacity = Math.random() * 0.5 + 0.1;
+      this.y = -20;
+      this.size = Math.random() * 6 + 4; // Petal size
+      this.speedY = Math.random() * 1.5 + 0.5; // Falling speed
+      this.speedX = Math.random() * 1.5 - 0.75;
+      this.rotation = Math.random() * 360;
+      this.rotationSpeed = Math.random() * 2 - 1;
+      
+      const colors = ['#ffb6c1', '#ffc0cb', '#ffe4e1', '#ffffff'];
+      this.color = colors[Math.floor(Math.random() * colors.length)];
+      this.opacity = Math.random() * 0.6 + 0.3;
     }
 
     update() {
-      this.y -= this.speedY;
-      this.x += this.speedX;
-      this.speedX += Math.random() * 0.02 - 0.01;
+      this.y += this.speedY;
+      this.x += Math.sin(this.y / 50) * this.speedX;
+      this.rotation += this.rotationSpeed;
 
-      if (this.y < -20) {
+      if (this.y > canvas.height + 20) {
         this.reset();
       }
     }
 
     draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rotation * Math.PI / 180);
+      
       ctx.beginPath();
-      const isDark = document.body.classList.contains('dark');
-      ctx.fillStyle = isDark
-        ? `rgba(232, 195, 90, ${this.opacity})`
-        : `rgba(212, 175, 55, ${this.opacity})`;
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.moveTo(0, 0);
+      ctx.quadraticCurveTo(this.size, -this.size, 0, -this.size * 2);
+      ctx.quadraticCurveTo(-this.size, -this.size, 0, 0);
       ctx.fill();
+      
+      ctx.restore();
     }
   }
 
@@ -340,7 +351,7 @@ function initCarousel() {
 /* ==========================================================================
    GIFT TABLE - COPY ACCOUNT NUMBER
    ========================================================================== */
-window.copyClabe = function(clabe) {
+window.copyClabe = function (clabe) {
   navigator.clipboard.writeText(clabe).then(() => {
     showToast('<i class="fa-solid fa-check"></i> Cuenta copiada al portapapeles');
   }).catch(err => {
@@ -390,12 +401,12 @@ function initShare() {
   }
 }
 
-window.closeShareModal = function() {
+window.closeShareModal = function () {
   const shareModal = document.getElementById('share-modal');
   if (shareModal) shareModal.classList.remove('active');
 };
 
-window.copyLink = function() {
+window.copyLink = function () {
   const currentUrl = window.location.href;
   navigator.clipboard.writeText(currentUrl).then(() => {
     showToast('<i class="fa-solid fa-link"></i> Enlace copiado al portapapeles');
